@@ -51,3 +51,53 @@ function logRegOnevsAll(X,y)
 
 	return LinearModel(predict,W)
 end
+
+function softmaxclassifier(X,y)
+	(n,d) = size(X)
+	k = maximum(y)
+
+	# Each column of 'w' will be a logistic regression classifier
+	W = zeros(d,k)
+
+	# Each binary objective has the same features but different lables
+	funObj(w) = softmaxObj(w,X,y,k)
+
+	W[:] = findMin(funObj,W[:],maxIter = 500, derivativeCheck=true)
+
+	# Make linear prediction function
+	predict(Xhat) = mapslices(indmax,Xhat*W,2)
+
+	return LinearModel(predict,W)
+end
+
+
+function softmaxObj(w,X,y,k)
+	(n,d) = size(X)
+	W = reshape(w,d,k)
+
+	XW = X*W # dim n * k
+
+	Z = sum(exp.(XW),2) # dim n
+
+	f = 0
+	g = zeros(d,k)
+
+	for i in 1:n
+
+		f += -XW[i, y[i]]+log(Z[i])
+
+		p = exp.(XW[i,:])/Z[i]
+
+		for c in 1:k
+
+			
+
+		end
+
+
+	end
+
+	f = sum(log.(1 + exp.(-yXw)))
+	g = -X'*(y./(1+exp.(yXw)))
+	return (f,g)
+end
