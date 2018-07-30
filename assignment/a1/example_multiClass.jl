@@ -13,7 +13,7 @@ Xtest = [ones(t,1) Xtest]
 
 # Fit one-vs-all logistic regression model
 include("logReg.jl")
-model = logRegOnevsAll(X,y)
+model = softmaxclassifier(X,y)
 
 # Compute training and validation error
 yhat = model.predict(X)

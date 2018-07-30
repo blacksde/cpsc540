@@ -59,8 +59,9 @@ function softmaxclassifier(X,y)
 	# Each column of 'w' will be a logistic regression classifier
 	W = zeros(d,k)
 
-	# Each binary objective has the same features but different lables
 	funObj(w) = softmaxObj(w,X,y,k)
+
+	print(size(W))
 
 	W[:] = findMin(funObj,W[:],maxIter = 500, derivativeCheck=true)
 
@@ -73,6 +74,7 @@ end
 
 function softmaxObj(w,X,y,k)
 	(n,d) = size(X)
+
 	W = reshape(w,d,k)
 
 	XW = X*W # dim n * k
@@ -90,14 +92,14 @@ function softmaxObj(w,X,y,k)
 
 		for c in 1:k
 
-			
+			g[:,c]+= X[i,:]*(p[c]-(y[i]==c))
 
 		end
 
 
 	end
 
-	f = sum(log.(1 + exp.(-yXw)))
-	g = -X'*(y./(1+exp.(yXw)))
-	return (f,g)
+	G = reshape(g,d*k,1)
+
+	return (f,G)
 end
